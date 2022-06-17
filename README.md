@@ -1,7 +1,7 @@
 # taro-f2-react
 
 > 支持在使用 Taro React 开发小程序中，按 React 组件书写方式使用 F2 。
-<br>使用 @antv/f2 最新版本 4.x
+<br>使用 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started) 版本 4.x
 
 # Install
 
