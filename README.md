@@ -16,6 +16,7 @@ $ yarn add taro-f2-react
 # Usage
 
 不需要额外配置 usingComponents 小程序原生组件，直接通过 import 引入 React 组件即可。
+<br>详细使用请参考 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started)
 
 ```javascript
 import React from 'react';
