@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "declaration": true,
+    "noUnusedLocals": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "removeComments": true,
+    "jsx": "react-jsx",
+    "outDir": "es"
+  },
+  "include": ["components"],
+  "exclude": ["node_modules"]
+}
