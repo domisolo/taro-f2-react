@@ -1,6 +1,6 @@
 {
   "name": "taro-f2-react",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "支持在使用 Taro React 开发小程序中，按 React 组件书写方式使用 F2",
   "main": "lib/index.js",
   "module": "es/index.js",
