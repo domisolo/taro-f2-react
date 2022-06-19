@@ -1,7 +1,7 @@
 # taro-f2-react
 
 > 支持在使用 Taro React 开发小程序中，按 React 组件书写方式使用 F2 。
-<br>使用 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started) 版本 4.x
+<br>使用 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started) 版本 >= 4.x
 
 # Install
 
@@ -15,8 +15,9 @@ $ yarn add taro-f2-react
 
 # Usage
 
-不需要额外配置 usingComponents 小程序原生组件，直接通过 import 引入 React 组件即可。
-<br>详细使用请参考 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started)
+不需要额外配置 usingComponents 小程序原生组件，通过 import 引入 taro-f2-react 组件即可。
+<br>详细使用文档参考 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started)
+<br>接下来就可以愉快的在 Taro 中使用 F2 了
 
 ```javascript
 import React from 'react';
@@ -47,7 +48,8 @@ ReactDOM.render(
 
 ## Support
 
-Taro > 3.x
+Taro >= 3.x
+<br>antv/f2 >= 4.x
 
 ## LICENSE [MIT](LICENSE)
 
