@@ -7,10 +7,10 @@
 
 ```bash
 # via npm
-$ npm i taro-f2-react
+$ npm i taro-f2-react @antv/f2
 
 # via yarn
-$ yarn add taro-f2-react
+$ yarn add taro-f2-react @antv/f2
 ```
 
 # Usage
