@@ -59,6 +59,7 @@ const F2Canvas: FC<F2CanvasProps> = (props) => {
             height,
             context,
             children: childrenRef.current,
+            createImage: () => node.createImage(),
           });
           canvas.render();
           canvasRef.current = canvas;
