@@ -6,6 +6,7 @@ import { Canvas as FFCanvas } from '@antv/f2';
 import useUnmount from './use-unmount';
 
 interface F2CanvasProps {
+  id?: string;
   children?: ReactNode;
 }
 
@@ -23,7 +24,9 @@ function wrapEvent(e: CanvasEvent) {
 }
 
 const F2Canvas: FC<F2CanvasProps> = (props) => {
-  const { children } = props;
+  const { id, children } = props;
+
+  const idRef = useRef(id || 'f2Canvas');
   const canvasRef = useRef<FFCanvas>();
   const canvasElRef = useRef<CanvasElement>();
   const childrenRef = useRef<ReactNode>(children);
@@ -41,7 +44,7 @@ const F2Canvas: FC<F2CanvasProps> = (props) => {
     const renderCanvas = () => {
       const query = createSelectorQuery();
       query
-        .select('#f2Canvas')
+        .select(`#${idRef.current}`)
         .fields({
           node: true,
           size: true,
@@ -110,7 +113,7 @@ const F2Canvas: FC<F2CanvasProps> = (props) => {
 
   return (
     <Canvas
-      id="f2Canvas"
+      id={idRef.current}
       type="2d"
       style="width:100%;height:100%;display:block;padding: 0;margin: 0;"
       onClick={handleClick}
