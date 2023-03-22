@@ -1,4 +1,10 @@
-import { ReactNode, FC, useEffect, useRef } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import { useReady, createSelectorQuery, getSystemInfoSync } from '@tarojs/taro';
 import { ITouchEvent, CanvasTouchEvent, Canvas } from '@tarojs/components';
 import { Canvas as FFCanvas } from '@antv/f2';
@@ -8,6 +14,10 @@ import useUnmount from './use-unmount';
 interface F2CanvasProps {
   id?: string;
   children?: ReactNode;
+}
+
+interface F2CanvasRef {
+  renderCanvas: () => void;
 }
 
 type CanvasEvent = ITouchEvent | CanvasTouchEvent;
@@ -23,7 +33,7 @@ function wrapEvent(e: CanvasEvent) {
   return e;
 }
 
-const F2Canvas: FC<F2CanvasProps> = (props) => {
+const F2Canvas = forwardRef<F2CanvasRef, F2CanvasProps>((props, ref) => {
   const { id, children } = props;
 
   const idRef = useRef(id || 'f2Canvas');
@@ -40,36 +50,38 @@ const F2Canvas: FC<F2CanvasProps> = (props) => {
     canvasRef.current?.destroy();
   });
 
-  useReady(() => {
-    const renderCanvas = () => {
-      const query = createSelectorQuery();
-      query
-        .select(`#${idRef.current}`)
-        .fields({
-          node: true,
-          size: true,
-        })
-        .exec((res) => {
-          const { node, width, height } = res[0];
-          const pixelRatio = getSystemInfoSync().pixelRatio;
-          // 高清设置
-          node.width = width * pixelRatio;
-          node.height = height * pixelRatio;
-          const context = node.getContext('2d');
-          const canvas = new FFCanvas({
-            pixelRatio,
-            width,
-            height,
-            context,
-            children: childrenRef.current,
-            createImage: () => node.createImage(),
-          });
-          canvas.render();
-          canvasRef.current = canvas;
-          canvasElRef.current = canvas.canvas.get('el');
+  const renderCanvas = () => {
+    const query = createSelectorQuery();
+    query
+      .select(`#${idRef.current}`)
+      .fields({
+        node: true,
+        size: true,
+      })
+      .exec((res) => {
+        const { node, width, height } = res[0];
+        const pixelRatio = getSystemInfoSync().pixelRatio;
+        // 高清设置
+        node.width = width * pixelRatio;
+        node.height = height * pixelRatio;
+        const context = node.getContext('2d');
+        const canvas = new FFCanvas({
+          pixelRatio,
+          width,
+          height,
+          context,
+          children: childrenRef.current,
+          createImage: () => node.createImage(),
         });
-    };
+        canvas.render();
+        canvasRef.current = canvas;
+        canvasElRef.current = canvas.canvas.get('el');
+      });
+  };
 
+  useImperativeHandle(ref, () => ({ renderCanvas }));
+
+  useReady(() => {
     // 延迟是为了确保能获取到 node 对象，直接获取会出现 node 为 null 的情况
     // 如有更好的办法欢迎提 PR 或 issue: https://github.com/daniel-zd/taro-f2-react/issues
     setTimeout(renderCanvas);
@@ -122,6 +134,6 @@ const F2Canvas: FC<F2CanvasProps> = (props) => {
       onTouchEnd={handleTouchEnd}
     />
   );
-};
+});
 
 export default F2Canvas;
