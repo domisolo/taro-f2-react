@@ -1,11 +1,5 @@
-import {
-  ReactNode,
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-} from 'react';
-import { useReady, createSelectorQuery, getSystemInfoSync } from '@tarojs/taro';
+import { ReactNode, useEffect, useRef } from 'react';
+import { createSelectorQuery, getSystemInfoSync } from '@tarojs/taro';
 import { ITouchEvent, CanvasTouchEvent, Canvas } from '@tarojs/components';
 import { Canvas as FFCanvas } from '@antv/f2';
 
@@ -14,10 +8,6 @@ import useUnmount from './use-unmount';
 interface F2CanvasProps {
   id?: string;
   children?: ReactNode;
-}
-
-interface F2CanvasRef {
-  renderCanvas: () => void;
 }
 
 type CanvasEvent = ITouchEvent | CanvasTouchEvent;
@@ -33,21 +23,22 @@ function wrapEvent(e: CanvasEvent) {
   return e;
 }
 
-const F2Canvas = forwardRef<F2CanvasRef, F2CanvasProps>((props, ref) => {
+const F2Canvas = (props: F2CanvasProps) => {
   const { id, children } = props;
 
   const idRef = useRef(id || 'f2Canvas');
-  const canvasRef = useRef<FFCanvas>();
+  const canvasRef = useRef<typeof Canvas>();
+  const ffCanvasRef = useRef<FFCanvas>();
   const canvasElRef = useRef<CanvasElement>();
-  const childrenRef = useRef<ReactNode>(children);
+  const childrenRef = useRef<ReactNode>();
 
   useEffect(() => {
     childrenRef.current = children;
-    canvasRef.current?.update({ children });
+    ffCanvasRef.current?.update({ children });
   }, [children]);
 
   useUnmount(() => {
-    canvasRef.current?.destroy();
+    ffCanvasRef.current?.destroy();
   });
 
   const renderCanvas = () => {
@@ -71,21 +62,19 @@ const F2Canvas = forwardRef<F2CanvasRef, F2CanvasProps>((props, ref) => {
           height,
           context,
           children: childrenRef.current,
-          createImage: () => node.createImage(),
+          createImage: () => node.createImage(), // fix: 解决图片元素不渲染的问题
         });
         canvas.render();
-        canvasRef.current = canvas;
+        ffCanvasRef.current = canvas;
         canvasElRef.current = canvas.canvas.get('el');
       });
   };
 
-  useImperativeHandle(ref, () => ({ renderCanvas }));
-
-  useReady(() => {
-    // 延迟是为了确保能获取到 node 对象，直接获取会出现 node 为 null 的情况
-    // 如有更好的办法欢迎提 PR 或 issue: https://github.com/daniel-zd/taro-f2-react/issues
-    setTimeout(renderCanvas);
-  });
+  useEffect(() => {
+    if (canvasRef.current) {
+      renderCanvas();
+    }
+  }, [canvasRef]);
 
   const handleClick = (e: ITouchEvent) => {
     const canvasEl = canvasElRef.current;
@@ -126,6 +115,7 @@ const F2Canvas = forwardRef<F2CanvasRef, F2CanvasProps>((props, ref) => {
   return (
     <Canvas
       id={idRef.current}
+      ref={canvasRef}
       type="2d"
       style="width:100%;height:100%;display:block;padding: 0;margin: 0;"
       onClick={handleClick}
@@ -134,6 +124,6 @@ const F2Canvas = forwardRef<F2CanvasRef, F2CanvasProps>((props, ref) => {
       onTouchEnd={handleTouchEnd}
     />
   );
-});
+};
 
 export default F2Canvas;
