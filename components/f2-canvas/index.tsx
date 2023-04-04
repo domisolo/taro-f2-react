@@ -72,7 +72,7 @@ const F2Canvas = (props: F2CanvasProps) => {
 
   useEffect(() => {
     if (canvasRef.current) {
-      renderCanvas();
+      setTimeout(renderCanvas);
     }
   }, [canvasRef]);
 
