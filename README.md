@@ -4,7 +4,7 @@
 > <br>使用 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started) 版本 >= 4.x
 
 # Demo
-<img src="./docs/screenshot.png" alt="Demo" width="30%" />
+<img src="https://github.com/domisooo/taro-f2-react/blob/main/docs/screenshot.png" alt="Demo" width="30%" />
 
 # Install
 
