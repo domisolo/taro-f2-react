@@ -1,7 +1,7 @@
 # taro-f2-react
 
 > 支持在使用 Taro React 开发小程序中，按 React 组件书写方式使用 F2 。
-<br>使用 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started) 版本 >= 4.x
+> <br>使用 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started) 版本 >= 4.x
 
 # Install
 
@@ -49,7 +49,47 @@ ReactDOM.render(
 );
 ```
 
-## Support
+## 多图表
+
+有时候需要在同一个页面展示多个图表，这个时候就可以通过指定 F2Canvas 不同的 id 来实现
+| 属性 | 类型 | 默认值 | 是否必填 |
+| ------- | ------- | ------- | ------- |
+| id | string | f2Canvas | 否 |
+
+```javascript
+<F2Canvas id="myCanvas1">
+  <Chart data={data}>
+    <Interval x="genre" y="sold" />
+  </Chart>
+</F2Canvas>
+
+...
+
+<F2Canvas id="myCanvas2">
+  <Chart data={data}>
+    <Interval x="genre" y="sold" />
+  </Chart>
+</F2Canvas>
+```
+
+# 异常处理
+
+## TypeError: Cannot destructure property 'node' of 'res[0]' as it is null.
+Taro 在 >= 3.6.0 版本中 Dev 模式下新增了 split chunks，导致加载第三方 UI 组件时，无法正确的挂载组件，可以通过修改以下配置关闭此特性，问题即可解决。
+```
+{
+  ...
+  compiler: {
+    type: 'webpack5',
+    prebundle: {
+      enable: false,
+    },
+  },
+  ...
+}
+```
+
+# Support
 
 Taro >= 3.x
 <br>antv/f2 >= 4.x
