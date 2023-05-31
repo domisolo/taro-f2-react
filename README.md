@@ -6,6 +6,9 @@
 # Install
 
 ```bash
+#via pnpm
+$ pnpm add taro-f2-react @antv/f2
+
 # via npm
 $ npm i taro-f2-react @antv/f2
 
