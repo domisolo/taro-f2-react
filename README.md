@@ -1,7 +1,9 @@
 # taro-f2-react
 
 > 支持在使用 Taro React 开发小程序中，按 React 组件书写方式使用 F2 。
-> <br>使用 [@antv/f2](https://f2.antv.vision/zh/docs/tutorial/getting-started) 版本 >= 4.x
+> <br>使用 [@antv/f2](https://f2.antv.antgroup.com/tutorial/getting-started)
+> <br>taro-f2-react 1.1.x 支持 4.x <= @antv/f2 < 5.x
+> <br>taro-f2-react 1.2.x 支持 @antv/f2 >= 5.x
 
 # Demo
 <img src="https://github.com/domisooo/taro-f2-react/blob/main/docs/screenshot.png" alt="Demo" width="30%" />
@@ -95,7 +97,8 @@ Taro 在 >= 3.6.0 版本中 Dev 模式下新增了 split chunks，导致加载�
 # Support
 
 Taro >= 3.x
-<br>antv/f2 >= 4.x
+<br>taro-f2-react 1.1.x 支持 4.x <= @antv/f2 < 5.x
+<br>taro-f2-react 1.2.x 支持 @antv/f2 >= 5.x
 
 ## LICENSE [MIT](LICENSE)
 

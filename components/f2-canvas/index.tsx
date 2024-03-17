@@ -1,47 +1,58 @@
-import { ReactNode, useEffect, useRef } from 'react';
-import { createSelectorQuery, getSystemInfoSync } from '@tarojs/taro';
-import { ITouchEvent, CanvasTouchEvent, Canvas } from '@tarojs/components';
+import { ReactNode, useCallback, useEffect, useRef } from 'react';
+import {
+  createOffscreenCanvas,
+  createSelectorQuery,
+  getSystemInfoSync,
+} from '@tarojs/taro';
+import { Canvas } from '@tarojs/components';
 import { Canvas as FFCanvas } from '@antv/f2';
-
-import useUnmount from './use-unmount';
 
 interface F2CanvasProps {
   id?: string;
   children?: ReactNode;
 }
 
-type CanvasEvent = ITouchEvent | CanvasTouchEvent;
-
-interface CanvasElement {
-  dispatchEvent: (type: string, event: CanvasEvent) => void;
+function convertTouches(touches) {
+  if (!touches) return touches;
+  touches.forEach((touch) => {
+    touch.pageX = 0;
+    touch.pageY = 0;
+    touch.clientX = touch.x;
+    touch.clientY = touch.y;
+  });
+  return touches;
 }
 
-function wrapEvent(e: CanvasEvent) {
-  if (e && !e.preventDefault) {
-    e.preventDefault = function () {};
+function dispatchEvent(el, event, type) {
+  if (!el || !event) return;
+  if (!event.preventDefault) {
+    event.preventDefault = function () {};
   }
-  return e;
+  const mergedEvent = {
+    ...event,
+    type,
+    target: el,
+  };
+  const { touches, changedTouches, detail } = mergedEvent;
+  mergedEvent.touches = convertTouches(touches);
+  mergedEvent.changedTouches = convertTouches(changedTouches);
+  if (detail) {
+    mergedEvent.clientX = detail.x;
+    mergedEvent.clientY = detail.y;
+  }
+  el.dispatchEvent(mergedEvent);
 }
 
 const F2Canvas = (props: F2CanvasProps) => {
   const { id, children } = props;
 
-  const idRef = useRef(id || 'f2Canvas');
+  const idRef = useRef(id || 'f-canvas');
   const canvasRef = useRef<typeof Canvas>();
   const ffCanvasRef = useRef<FFCanvas>();
-  const canvasElRef = useRef<CanvasElement>();
-  const childrenRef = useRef<ReactNode>();
+  const canvasElRef = useRef<any>();
+  // const childrenRef = useRef<ReactNode>();
 
-  useEffect(() => {
-    childrenRef.current = children;
-    ffCanvasRef.current?.update({ children });
-  }, [children]);
-
-  useUnmount(() => {
-    ffCanvasRef.current?.destroy();
-  });
-
-  const renderCanvas = () => {
+  const renderCanvas = useCallback(() => {
     const query = createSelectorQuery();
     query
       .select(`#${idRef.current}`)
@@ -51,6 +62,8 @@ const F2Canvas = (props: F2CanvasProps) => {
       })
       .exec((res) => {
         const { node, width, height } = res[0];
+        const { requestAnimationFrame, cancelAnimationFrame } = node;
+
         const pixelRatio = getSystemInfoSync().pixelRatio;
         // 高清设置
         node.width = width * pixelRatio;
@@ -61,14 +74,20 @@ const F2Canvas = (props: F2CanvasProps) => {
           width,
           height,
           context,
-          children: childrenRef.current,
+          children,
+          // @ts-ignore
+          offscreenCanvas: createOffscreenCanvas({ type: '2d' }),
           createImage: () => node.createImage(), // fix: 解决图片元素不渲染的问题
+          requestAnimationFrame,
+          cancelAnimationFrame,
+          isTouchEvent: (e) => e.type.startsWith('touch'),
+          isMouseEvent: (e) => e.type.startsWith('mouse'),
         });
-        canvas.render();
         ffCanvasRef.current = canvas;
-        canvasElRef.current = canvas.canvas.get('el');
+        canvasElRef.current = canvas.getCanvasEl();
+        canvas.render();
       });
-  };
+  }, []);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -76,41 +95,13 @@ const F2Canvas = (props: F2CanvasProps) => {
     }
   }, [canvasRef]);
 
-  const handleClick = (e: ITouchEvent) => {
-    const canvasEl = canvasElRef.current;
-    if (!canvasEl) {
-      return;
-    }
+  useEffect(() => {
+    ffCanvasRef.current?.update({ children });
+  }, [children]);
 
-    const event = wrapEvent(e);
-    // 包装成 touch 对象
-    event.touches = [e.detail];
-    canvasEl.dispatchEvent('click', event);
-  };
-
-  const handleTouchStart = (e: CanvasTouchEvent) => {
-    const canvasEl = canvasElRef.current;
-    if (!canvasEl) {
-      return;
-    }
-    canvasEl.dispatchEvent('touchstart', wrapEvent(e));
-  };
-
-  const handleTouchMove = (e: CanvasTouchEvent) => {
-    const canvasEl = canvasElRef.current;
-    if (!canvasEl) {
-      return;
-    }
-    canvasEl.dispatchEvent('touchmove', wrapEvent(e));
-  };
-
-  const handleTouchEnd = (e: CanvasTouchEvent) => {
-    const canvasEl = canvasElRef.current;
-    if (!canvasEl) {
-      return;
-    }
-    canvasEl.dispatchEvent('touchend', wrapEvent(e));
-  };
+  useEffect(() => {
+    return () => ffCanvasRef.current?.destroy();
+  }, []);
 
   return (
     <Canvas
@@ -118,10 +109,10 @@ const F2Canvas = (props: F2CanvasProps) => {
       ref={canvasRef}
       type="2d"
       style="width:100%;height:100%;display:block;padding: 0;margin: 0;"
-      onClick={handleClick}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      onClick={(e) => dispatchEvent(canvasElRef.current, e, 'click')}
+      onTouchStart={(e) => dispatchEvent(canvasElRef.current, e, 'touchstart')}
+      onTouchMove={(e) => dispatchEvent(canvasElRef.current, e, 'touchmove')}
+      onTouchEnd={(e) => dispatchEvent(canvasElRef.current, e, 'touchend')}
     />
   );
 };
