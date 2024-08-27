@@ -1,7 +1,7 @@
 {
   "name": "taro-f2-react",
-  "version": "1.2.0",
-  "description": "支持在使用 Taro React 开发小程序中，按 React 组件书写方式使用 F2",
+  "version": "1.3.0",
+  "description": "在 Taro React 中使用 @antv/f2",
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "es/index.d.ts",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/daniel-zd/taro-f2-react.git"
+    "url": "git+https://github.com/domisolo/taro-f2-react.git"
   },
   "keywords": [
     "taro",
@@ -29,14 +29,16 @@
   "author": "Daniel Zhao",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/daniel-zd/taro-f2-react/issues"
+    "url": "https://github.com/domisolo/taro-f2-react/issues"
   },
-  "homepage": "https://github.com/daniel-zd/taro-f2-react#readme",
+  "homepage": "https://github.com/domisolo/taro-f2-react#readme",
+  "dependencies": {
+    "@antv/f2": "^4.0.51"
+  },
   "devDependencies": {
-    "@antv/f2": "^5.4.2",
-    "@tarojs/components": "^3.6.24",
-    "@tarojs/taro": "^3.6.24",
-    "@types/react": "^18.2.66",
-    "typescript": "^5.4.2"
+    "@tarojs/components": "^3.6.35",
+    "@tarojs/taro": "^3.6.35",
+    "@types/react": "^18.3.4",
+    "typescript": "^5.5.4"
   }
 }

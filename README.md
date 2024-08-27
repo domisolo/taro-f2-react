@@ -1,24 +1,21 @@
 # taro-f2-react
 
-> 支持在使用 Taro React 开发小程序中，按 React 组件书写方式使用 F2 。
-> <br>使用 [@antv/f2](https://f2.antv.antgroup.com/tutorial/getting-started)
-> <br>taro-f2-react 1.1.x 支持 4.x <= @antv/f2 < 5.x
-> <br>taro-f2-react 1.2.x 支持 @antv/f2 >= 5.x
+> 在 Taro React 中使用 @antv/f2 。
 
 # Demo
-<img src="https://github.com/domisooo/taro-f2-react/blob/main/docs/screenshot.png" alt="Demo" width="30%" />
+<img src="https://github.com/domisolo/taro-f2-react/blob/main/docs/screenshot.png" alt="Demo" width="30%" />
 
 # Install
 
 ```bash
 #via pnpm
-$ pnpm add taro-f2-react @antv/f2
+$ pnpm add taro-f2-react @antv/f2@4.0.51
 
 # via npm
-$ npm i taro-f2-react @antv/f2
+$ npm i taro-f2-react
 
 # via yarn
-$ yarn add taro-f2-react @antv/f2
+$ yarn add taro-f2-react
 ```
 
 # Usage
@@ -28,30 +25,30 @@ $ yarn add taro-f2-react @antv/f2
 <br>接下来就可以愉快的在 Taro 中使用 F2 了
 
 ```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { View } from '@tarojs/components';
-import F2Canvas from 'taro-f2-react';
-import { Chart, Interval } from '@antv/f2';
+import React from "react";
+import { View } from "@tarojs/components";
+import F2Canvas from "taro-f2-react";
+import { Chart, Interval } from "@antv/f2";
 
 const data = [
-  { genre: 'Sports', sold: 275 },
-  { genre: 'Strategy', sold: 115 },
-  { genre: 'Action', sold: 120 },
-  { genre: 'Shooter', sold: 350 },
-  { genre: 'Other', sold: 150 },
+  { genre: "Sports", sold: 275 },
+  { genre: "Strategy", sold: 115 },
+  { genre: "Action", sold: 120 },
+  { genre: "Shooter", sold: 350 },
+  { genre: "Other", sold: 150 },
 ];
 
-ReactDOM.render(
-  <View style={{ width: '100%', height: '260px' }}>
-    <F2Canvas>
-      <Chart data={data}>
-        <Interval x="genre" y="sold" />
-      </Chart>
-    </F2Canvas>
-  </View>,
-  document.getElementById('root')
-);
+function Index() {
+  return (
+    <View style={{ width: "100%", height: "260px" }}>
+      <F2Canvas>
+        <Chart data={data}>
+          <Interval x="genre" y="sold" />
+        </Chart>
+      </F2Canvas>
+    </View>
+  );
+}
 ```
 
 ## 多图表
@@ -94,11 +91,14 @@ Taro 在 >= 3.6.0 版本中 Dev 模式下新增了 split chunks，导致加载�
 }
 ```
 
+# 关于 @antv/f2 5.x
+* 由于开发者反馈 @antv/f2 5.x 版本的问题较多，最新版本修改为支持 4.x 版本
+* 如果想体验 @antv/f2 5.x 版本，可以安装 taro-f2-react 1.2.0 版本
+
 # Support
 
 Taro >= 3.x
-<br>taro-f2-react 1.1.x 支持 4.x <= @antv/f2 < 5.x
-<br>taro-f2-react 1.2.x 支持 @antv/f2 >= 5.x
+<br> @antv/f2@4.x
 
 ## LICENSE [MIT](LICENSE)
 
